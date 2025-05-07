@@ -1,66 +1,84 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="neurocss.css">
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
   <script src="https://kit.fontawesome.com/5b42833b89.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-TfN1XKRqNHX0bRFGFtCyz3Buw+/RfG0K2JhOQGL6IjAx0c5dEfEyByIqvEX1iETMRpq79AaN1chfIep0QqLaYg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="icon" href="img/brain-solid.svg" type="image/svg+xml">
-  <title>Neuroclave</title>
+  <title>Neuroclave - Test de Neurodivergencia</title>
 </head>
 <body>
-  <div class="intro-box">
+  <header data-aos="fade-down">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <i class="fas fa-brain icon"></i>
+        Neuroclave
+      </a>
+    </div>
+  </header>
+
+  <div class="intro-box" data-aos="fade-up">
     <div class="intro-text">
-      <p>
-        ¿Alguna vez ha sentido que piensa y experimenta el mundo de forma diferente? No está solo.
-        Este cuestionario sobre neurodivergencia está diseñado para ayudarle a explorar el variado espectro de la neurodiversidad
-        y conocer mejor su propio perfil cognitivo. Tanto si siente curiosidad por la neurodivergencia como si simplemente quiere
-        comprenderse mejor a sí mismo, dé el primer paso hacia el autodescubrimiento con nuestra rápida y perspicaz evaluación.
-      </p>
+      <h1>Explora Tu Perfil Neurocognitivo</h1>
+      <p>¿Alguna vez has sentido que piensas y experimentas el mundo de forma diferente? No estás solo.</p>
+      <p>Este cuestionario sobre neurodivergencia está diseñado para ayudarte a explorar el variado espectro de la neurodiversidad y conocerte mejor.</p>
     </div>
     <div class="intro-image">
       <img src="img/div.png" alt="Imagen representativa de la neurodiversidad">
     </div>
   </div>
-  <div class="test-container">
+
+  <div class="test-container" data-aos="zoom-in" data-aos-delay="200">
     <div class="test-intro-text">
-      <p>Este cuestionario está diseñado para ayudar a concienciar sobre los rasgos neurodivergentes.
-        No es una herramienta de diagnóstico.
-      </p>
+      <p><strong>Nota importante:</strong> Este cuestionario es orientativo, no clínico.</p>
       <p>Responde cada pregunta según cómo te sientes la mayoría del tiempo.</p>
     </div>
-  
-    <!-- Barra de progreso -->
+
     <div class="progress-wrapper">
-      <div id="progress-text">Pregunta 1 de 4</div>
+      <div id="progress-text">Pregunta 1 de </div>
       <div class="progress-bar-container">
         <div class="progress-bar" id="progress-bar"></div>
       </div>
     </div>
-  
-    <div class="question-card">
+
+    <div class="question-card animated-card">
       <h2 id="question-text">1. Me resulta difícil concentrarme durante períodos largos.</h2>
       <div class="options" id="options-container"></div>
-  
+
       <div class="navigation-buttons">
-        <button id="backBtn" onclick="lastQuestion()">Regresar</button>
-        <button id="nextBtn" onclick="nextQuestion()">Siguiente</button>
-        <button id="resultBtn" onclick="showResults()">Mostrar Resultados</button>
+        <button id="backBtn" onclick="lastQuestion()">
+          <i class="fas fa-arrow-left"></i> Anterior
+        </button>
+        <button id="nextBtn" onclick="nextQuestion()">
+          Siguiente <i class="fas fa-arrow-right"></i>
+        </button>
+        <button id="resultBtn" onclick="showResults()">
+          Ver Resultados <i class="fas fa-chart-bar"></i>
+        </button>
       </div>
     </div>
-  
-    <div class="test-footer-text">
-      <p>Una vez completado, haz clic en "Mostrar Resultados" para ver tu evaluación.</p>
-    </div>
-  </div>  
 
-  <script src="script.js"></script>
+    <div class="test-footer-text" data-aos="fade-up">
+      <p>Una vez completado, haz clic en "Ver Resultados" para recibir tu evaluación.</p>
+    </div>
+  </div>
+
   <div id="popup-warning" class="popup hidden">
     <div class="popup-content">
+      <i class="fas fa-exclamation-circle" style="color: #ff7043; font-size: 2rem; margin-bottom: 15px;"></i>
       <p>Por favor, selecciona una respuesta antes de continuar.</p>
       <button onclick="closePopup()">Entendido</button>
     </div>
-  </div>  
+  </div>
+
+  <script src="script.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({ once: true, duration: 800 });
+  </script>
 </body>
 </html>
