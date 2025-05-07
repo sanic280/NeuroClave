@@ -1,52 +1,199 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Resultados del Test</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Resultados - Test de Neurodivergencia</title>
   <link rel="stylesheet" href="neurocss.css">
+  <script src="https://kit.fontawesome.com/5b42833b89.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-TfN1XKRqNHX0bRFGFtCyz3Buw+/RfG0K2JhOQGL6IjAx0c5dEfEyByIqvEX1iETMRpq79AaN1chfIep0QqLaYg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="icon" href="img/brain-solid.svg" type="image/svg+xml">
 </head>
 <body>
-  <div class="container">
-    <h2>Resultados del Test de Neurodivergencia</h2>
-    <div id="results-container"></div>
-    <button onclick="limpiarResultados()">Reiniciar Test</button>
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <i class="fas fa-brain icon"></i>
+        Neuroclave
+      </a>
+    </div>
+  </header>
+
+  <div class="results-container">
+    <div class="results-header">
+      <h1>Resultados de Tu Evaluación</h1>
+      <p>Basado en tus respuestas, estos son los resultados de tu evaluación de neurodivergencia.</p>
+    </div>
+
+    <div class="results-summary" id="overall-summary"></div>
+
+    <div class="neurodiv-type">
+      <h2>Perfil de Neurodivergencia</h2>
+      <p>Esta evaluación analiza la presencia de rasgos asociados con diferentes tipos de neurodivergencia. Recuerda que esto no es un diagnóstico clínico.</p>
+
+      <!-- Bloques de resultados -->
+      <div class="result-score">
+        <div class="score-label">TDAH</div>
+        <div class="score-bar-container"><div class="score-bar" id="tdah-bar"></div></div>
+        <div class="score-value" id="tdah-score">0%</div>
+      </div>
+      <div class="result-score">
+        <div class="score-label">Espectro Autista</div>
+        <div class="score-bar-container"><div class="score-bar" id="tea-bar"></div></div>
+        <div class="score-value" id="tea-score">0%</div>
+      </div>
+      <div class="result-score">
+        <div class="score-label">Trastorno Bipolar</div>
+        <div class="score-bar-container"><div class="score-bar" id="bipolar-bar"></div></div>
+        <div class="score-value" id="bipolar-score">0%</div>
+      </div>
+      <div class="result-score">
+        <div class="score-label">Dislexia</div>
+        <div class="score-bar-container"><div class="score-bar" id="dislexia-bar"></div></div>
+        <div class="score-value" id="dislexia-score">0%</div>
+      </div>
+      <div class="result-score">
+        <div class="score-label">TOC</div>
+        <div class="score-bar-container"><div class="score-bar" id="toc-bar"></div></div>
+        <div class="score-value" id="toc-score">0%</div>
+      </div>
+    </div>
+
+    <div class="result-details" id="specific-details"></div>
+
+    <div class="action-buttons">
+      <button onclick="window.location.href='index.html?reset=true'">
+        <i class="fas fa-redo"></i> Realizar Test de Nuevo
+      </button>
+    </div>
   </div>
 
   <script>
-    const questions = [
-      "Me resulta difícil concentrarme durante períodos largos.",
-      "Siento que mi forma de pensar es diferente a la de los demás.",
-      "Me cuesta entender señales sociales.",
-      "Prefiero rutinas fijas y me incomodan los cambios inesperados."
-    ];
+    document.addEventListener('DOMContentLoaded', function() {
+      const answers = JSON.parse(localStorage.getItem('neurodivergencia_respuestas'));
+      if (!answers || answers.length === 0) {
+        document.getElementById('overall-summary').innerHTML = '<p>No se encontraron respuestas. Por favor, completa el test.</p>';
+        return;
+      }
 
-    const options = [
-      "Totalmente en desacuerdo",
-      "En desacuerdo",
-      "Neutro",
-      "De acuerdo",
-      "Totalmente de acuerdo"
-    ];
+      const weights = [0, 0.25, 0.5, 0.75, 1];
+      const allQuestions = [
+        { type: ["tdah", "dislexia"] }, { type: ["tdah", "bipolar"] }, { type: ["tea"] },
+        { type: ["toc"] }, { type: ["tea", "toc"] }, { type: ["tea"] },
+        { type: ["bipolar"] }, { type: ["bipolar", "tdah"] }, { type: ["dislexia"] },
+        { type: ["dislexia"] }, { type: ["toc"] }, { type: ["toc"] }, { type: ["tdah"] },
+        { type: ["tea"] }, { type: ["toc"] }, { type: ["bipolar"] }, { type: ["dislexia"] },
+        { type: ["tea", "tdah"] }, { type: ["toc"] }, { type: ["bipolar", "tdah"] }
+      ];
 
-    const answers = JSON.parse(localStorage.getItem('neurodivergencia_respuestas'));
+      const scores = { tdah: 0, tea: 0, bipolar: 0, dislexia: 0, toc: 0 };
+      const maxScores = { tdah: 0, tea: 0, bipolar: 0, dislexia: 0, toc: 0 };
 
-    const container = document.getElementById('results-container');
-
-    if (answers) {
-      answers.forEach((respuesta, index) => {
-        const p = document.createElement('p');
-        const texto = respuesta !== null ? options[respuesta] : "Sin respuesta";
-        p.innerHTML = `<strong>${index + 1}. ${questions[index]}</strong><br>Respuesta: ${texto}`;
-        container.appendChild(p);
+      allQuestions.forEach((q, i) => {
+        const res = answers[i] ?? -1;
+        if (res >= 0 && res <= 4) {
+          q.type.forEach(t => {
+            scores[t] += weights[res];
+            maxScores[t] += 1;
+          });
+        }
       });
-    } else {
-      container.innerHTML = "<p>No hay respuestas registradas.</p>";
-    }
 
-    function limpiarResultados() {
-      localStorage.removeItem('neurodivergencia_respuestas');
-      window.location.href = "index.html";
-    }
+      const percentages = {};
+      for (const t in scores) {
+        percentages[t] = maxScores[t] > 0 ? Math.round((scores[t] / maxScores[t]) * 100) : 0;
+        document.getElementById(`${t}-bar`).style.width = percentages[t] + "%";
+        document.getElementById(`${t}-score`).textContent = percentages[t] + "%";
+      }
+
+      const highest = Object.entries(percentages).sort((a, b) => b[1] - a[1])[0];
+      const highType = highest[0], highScore = highest[1];
+      const nameMap = {
+        tdah: "Trastorno por Déficit de Atención e Hiperactividad",
+        tea: "Trastorno del Espectro Autista",
+        bipolar: "Trastorno Bipolar",
+        dislexia: "Dislexia",
+        toc: "Trastorno Obsesivo-Compulsivo"
+      };
+
+      const summary = document.getElementById('overall-summary');
+      const icon = highScore < 30 ? "check-circle" : highScore < 60 ? "info-circle" : "lightbulb";
+      const color = highScore < 30 ? "#28a745" : highScore < 60 ? "#6e62b5" : "#ff7043";
+      const title = highScore < 30 ? "Perfil Neurotípico Predominante"
+                   : highScore < 60 ? "Algunos Rasgos Neurodivergentes"
+                   : "Rasgos Neurodivergentes Significativos";
+      const desc = highScore < 30
+        ? "Tus respuestas sugieren que presentas principalmente características neurotípicas."
+        : highScore < 60
+          ? `Tus respuestas indican la presencia de algunos rasgos neurodivergentes, particularmente relacionados con ${nameMap[highType]}.`
+          : `Tus respuestas sugieren una presencia notable de rasgos asociados con ${nameMap[highType]}.`;
+
+      summary.innerHTML = `
+        <div style="display:flex;align-items:center;margin-bottom:10px;">
+          <i class="fas fa-${icon}" style="color:${color};font-size:2rem;margin-right:15px;"></i>
+          <div>
+            <h3>${title}</h3><p>${desc}</p>
+          </div>
+        </div>
+        <p><strong>Nota:</strong> Esta evaluación no constituye un diagnóstico clínico.</p>
+      `;
+
+      // Consulta de especialistas (sin tocar el diseño)
+      const consultationHTML = `
+        <p style="margin-top:20px;">
+          Si sientes que tienes problemas graves/constantes con algún rasgo que notes en ti mismo, favor de consultar algún especialista real en alguno de estos sitios:
+          <br>
+          <a href="https://www.topdoctors.mx/" target="_blank">Top Doctors</a>
+          <br>
+          <a href="https://www.doctoralia.com.mx/" target="_blank">Doctoralia</a>
+        </p>
+      `;
+
+      // Sección de recurso con vista previa, según el tipo de puntaje dominante
+      let resourcePreviewHTML = "";
+      switch (highType) {
+        case 'tdah':
+          resourcePreviewHTML = `
+            <div class="resource-preview" style="margin-top:20px;">
+              <p>Te recomendamos ver este video para profundizar en temas relacionados con TDAH:</p>
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/0ibhOUeBUVs" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>`;
+          break;
+        case 'tea':
+          resourcePreviewHTML = `
+            <div class="resource-preview" style="margin-top:20px;">
+              <p>Te recomendamos ver este video para profundizar en temas relacionados con el Trastorno del Espectro Autista:</p>
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/Vu2LmkNZPOM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>`;
+          break;
+        case 'bipolar':
+          resourcePreviewHTML = `
+            <div class="resource-preview" style="margin-top:20px;">
+              <p>Te recomendamos leer el siguiente recurso para profundizar en temas relacionados con el Trastorno Bipolar:</p>
+              <a href="https://www.nimh.nih.gov/health/publications/espanol/trastorno-bipolar" target="_blank">Recurso para Trastorno Bipolar</a>
+            </div>`;
+          break;
+        case 'dislexia':
+          resourcePreviewHTML = `
+            <div class="resource-preview" style="margin-top:20px;">
+              <p>Te recomendamos ver este video para profundizar en temas relacionados con Dislexia:</p>
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/A2xp0zoqFPY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>`;
+          break;
+        case 'toc':
+          resourcePreviewHTML = `
+            <div class="resource-preview" style="margin-top:20px;">
+              <p>Te recomendamos ver este video para profundizar en temas relacionados con TOC:</p>
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/PF6AF4fhcIk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>`;
+          break;
+        default:
+          resourcePreviewHTML = "";
+      }
+
+      // Añadimos al resumen el aviso de consulta y la vista previa del recurso
+      summary.innerHTML += consultationHTML + resourcePreviewHTML;
+    });
   </script>
 </body>
 </html>
