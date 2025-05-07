@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="neurocss.css">
+  <script src="https://kit.fontawesome.com/5b42833b89.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-TfN1XKRqNHX0bRFGFtCyz3Buw+/RfG0K2JhOQGL6IjAx0c5dEfEyByIqvEX1iETMRpq79AaN1chfIep0QqLaYg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="icon" href="img/brain-solid.svg" type="image/svg+xml">
+  <title>Neuroclave</title>
+</head>
+<body>
+  <div class="intro-box">
+    <div class="intro-text">
+      <p>
+        ¿Alguna vez ha sentido que piensa y experimenta el mundo de forma diferente? No está solo.
+        Este cuestionario sobre neurodivergencia está diseñado para ayudarle a explorar el variado espectro de la neurodiversidad
+        y conocer mejor su propio perfil cognitivo. Tanto si siente curiosidad por la neurodivergencia como si simplemente quiere
+        comprenderse mejor a sí mismo, dé el primer paso hacia el autodescubrimiento con nuestra rápida y perspicaz evaluación.
+      </p>
+    </div>
+    <div class="intro-image">
+      <img src="img/div.png" alt="Imagen representativa de la neurodiversidad">
+    </div>
+  </div>
+  <div class="test-container">
+    <div class="test-intro-text">
+      <p>Este cuestionario está diseñado para ayudar a concienciar sobre los rasgos neurodivergentes.
+        No es una herramienta de diagnóstico.
+      </p>
+      <p>Responde cada pregunta según cómo te sientes la mayoría del tiempo.</p>
+    </div>
+  
+    <!-- Barra de progreso -->
+    <div class="progress-wrapper">
+      <div id="progress-text">Pregunta 1 de 4</div>
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+    </div>
+  
+    <div class="question-card">
+      <h2 id="question-text">1. Me resulta difícil concentrarme durante períodos largos.</h2>
+      <div class="options" id="options-container"></div>
+  
+      <div class="navigation-buttons">
+        <button id="backBtn" onclick="lastQuestion()">Regresar</button>
+        <button id="nextBtn" onclick="nextQuestion()">Siguiente</button>
+        <button id="resultBtn" onclick="showResults()">Mostrar Resultados</button>
+      </div>
+    </div>
+  
+    <div class="test-footer-text">
+      <p>Una vez completado, haz clic en "Mostrar Resultados" para ver tu evaluación.</p>
+    </div>
+  </div>  
+
+  <script src="script.js"></script>
+  <div id="popup-warning" class="popup hidden">
+    <div class="popup-content">
+      <p>Por favor, selecciona una respuesta antes de continuar.</p>
+      <button onclick="closePopup()">Entendido</button>
+    </div>
+  </div>  
+</body>
+</html>

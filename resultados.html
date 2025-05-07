@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Resultados del Test</title>
+  <link rel="stylesheet" href="neurocss.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Resultados del Test de Neurodivergencia</h2>
+    <div id="results-container"></div>
+    <button onclick="limpiarResultados()">Reiniciar Test</button>
+  </div>
+
+  <script>
+    const questions = [
+      "Me resulta difícil concentrarme durante períodos largos.",
+      "Siento que mi forma de pensar es diferente a la de los demás.",
+      "Me cuesta entender señales sociales.",
+      "Prefiero rutinas fijas y me incomodan los cambios inesperados."
+    ];
+
+    const options = [
+      "Totalmente en desacuerdo",
+      "En desacuerdo",
+      "Neutro",
+      "De acuerdo",
+      "Totalmente de acuerdo"
+    ];
+
+    const answers = JSON.parse(localStorage.getItem('neurodivergencia_respuestas'));
+
+    const container = document.getElementById('results-container');
+
+    if (answers) {
+      answers.forEach((respuesta, index) => {
+        const p = document.createElement('p');
+        const texto = respuesta !== null ? options[respuesta] : "Sin respuesta";
+        p.innerHTML = `<strong>${index + 1}. ${questions[index]}</strong><br>Respuesta: ${texto}`;
+        container.appendChild(p);
+      });
+    } else {
+      container.innerHTML = "<p>No hay respuestas registradas.</p>";
+    }
+
+    function limpiarResultados() {
+      localStorage.removeItem('neurodivergencia_respuestas');
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>
