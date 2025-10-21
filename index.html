@@ -1,84 +1,698 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="neurocss.css">
-  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
-  <script src="https://kit.fontawesome.com/5b42833b89.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-TfN1XKRqNHX0bRFGFtCyz3Buw+/RfG0K2JhOQGL6IjAx0c5dEfEyByIqvEX1iETMRpq79AaN1chfIep0QqLaYg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="icon" href="img/brain-solid.svg" type="image/svg+xml">
-  <title>Neuroclave - Test de Neurodivergencia</title>
+  <title>Neuroclave - Evaluación con IA</title>
+  <style>
+    :root {
+      --primary-color: #6e62b5;
+      --primary-light: #8f85cc;
+      --primary-dark: #4d4380;
+      --secondary-color: #f9f9f9;
+      --accent-color: #ff7043;
+      --text-color: #333333;
+      --light-gray: #e0e0e0;
+      --white: #ffffff;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary-color) 30%, var(--secondary-color) 70%, var(--primary-light) 100%);
+      color: var(--text-color);
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: var(--white);
+      box-shadow: var(--shadow);
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+
+    .logo i {
+      margin-right: 10px;
+      font-size: 1.5rem;
+    }
+
+    .intro-section {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 40px;
+      background-color: var(--white);
+      border-radius: 15px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .intro-section h1 {
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      font-size: 2.2rem;
+    }
+
+    .intro-section p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      margin-bottom: 15px;
+    }
+
+    .start-button {
+      margin-top: 30px;
+      padding: 15px 40px;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+      color: var(--white);
+      border: none;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .start-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(110, 98, 181, 0.4);
+    }
+
+    .chat-container {
+      max-width: 900px;
+      margin: 30px auto;
+      background-color: var(--white);
+      border-radius: 15px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 600px;
+    }
+
+    .chat-header {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+      color: var(--white);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .chat-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .chat-header p {
+      margin: 5px 0 0 0;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      background-color: #fafafa;
+    }
+
+    .message {
+      display: flex;
+      margin-bottom: 20px;
+      animation: fadeInUp 0.4s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message.ai {
+      justify-content: flex-start;
+    }
+
+    .message.user {
+      justify-content: flex-end;
+    }
+
+    .message-content {
+      max-width: 70%;
+      padding: 15px 20px;
+      border-radius: 18px;
+      position: relative;
+      line-height: 1.6;
+    }
+
+    .message.ai .message-content {
+      background-color: var(--white);
+      border: 2px solid var(--primary-light);
+      color: var(--text-color);
+      border-bottom-left-radius: 4px;
+    }
+
+    .message.user .message-content {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+      color: var(--white);
+      border-bottom-right-radius: 4px;
+    }
+
+    .message-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .message.ai .message-avatar {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+      color: var(--white);
+      margin-right: 10px;
+    }
+
+    .message.user .message-avatar {
+      background-color: var(--accent-color);
+      color: var(--white);
+      margin-left: 10px;
+    }
+
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 10px;
+    }
+
+    .typing-indicator span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      animation: typing 1.4s infinite;
+    }
+
+    .typing-indicator span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-indicator span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes typing {
+      0%, 60%, 100% {
+        transform: translateY(0);
+        opacity: 0.7;
+      }
+      30% {
+        transform: translateY(-10px);
+        opacity: 1;
+      }
+    }
+
+    .chat-input-container {
+      padding: 20px;
+      background-color: var(--white);
+      border-top: 2px solid var(--light-gray);
+    }
+
+    .chat-input-wrapper {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    #userInput {
+      flex: 1;
+      padding: 15px;
+      border: 2px solid var(--light-gray);
+      border-radius: 25px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    #userInput:focus {
+      border-color: var(--primary-color);
+    }
+
+    #sendBtn {
+      padding: 15px 30px;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+      color: var(--white);
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    #sendBtn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(110, 98, 181, 0.4);
+    }
+
+    #sendBtn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .info-badge {
+      display: inline-block;
+      background-color: var(--primary-light);
+      color: var(--white);
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+
+    .progress-indicator {
+      padding: 10px 20px;
+      background-color: rgba(110, 98, 181, 0.1);
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .chat-container {
+        height: 500px;
+        margin: 20px 10px;
+      }
+
+      .message-content {
+        max-width: 85%;
+      }
+
+      .intro-section {
+        padding: 20px;
+        margin: 20px 10px;
+      }
+
+      .intro-section h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-  <header data-aos="fade-down">
+  <header>
     <div class="nav-container">
       <a href="index.html" class="logo">
-        <i class="fas fa-brain icon"></i>
+        <i class="fas fa-brain"></i>
         Neuroclave
       </a>
     </div>
   </header>
 
-  <div class="intro-box" data-aos="fade-up">
-    <div class="intro-text">
-      <h1>Explora Tu Perfil Neurocognitivo</h1>
-      <p>¿Alguna vez has sentido que piensas y experimentas el mundo de forma diferente? No estás solo.</p>
-      <p>Este cuestionario sobre neurodivergencia está diseñado para ayudarte a explorar el variado espectro de la neurodiversidad y conocerte mejor.</p>
+  <div id="introSection" class="intro-section">
+    <h1>Evaluación Neurocognitiva con IA</h1>
+    <p>Bienvenido a una nueva forma de explorar tu perfil neurocognitivo. Nuestra IA especializada conversará contigo de manera natural para comprender mejor tus experiencias y patrones de pensamiento.</p>
+    <p>Esta evaluación utiliza inteligencia artificial avanzada para ofrecer un análisis más profundo y personalizado que un cuestionario tradicional.</p>
+    <div class="info-badge">
+      <i class="fas fa-shield-alt"></i> Confidencial y seguro
     </div>
-    <div class="intro-image">
-      <img src="img/div.png" alt="Imagen representativa de la neurodiversidad">
-    </div>
+    <br>
+    <button class="start-button" onclick="startEvaluation()">
+      <i class="fas fa-comments"></i>
+      Comenzar Evaluación
+    </button>
   </div>
 
-  <div class="test-container" data-aos="zoom-in" data-aos-delay="200">
-    <div class="test-intro-text">
-      <p><strong>Nota importante:</strong> Este cuestionario es orientativo, no clínico.</p>
-      <p>Responde cada pregunta según cómo te sientes la mayoría del tiempo.</p>
+  <div id="chatContainer" class="chat-container hidden">
+    <div class="chat-header">
+      <h2><i class="fas fa-comments"></i> Conversación de Evaluación</h2>
+      <p>Responde con honestidad. Esta conversación es confidencial.</p>
     </div>
 
-    <div class="progress-wrapper">
-      <div id="progress-text">Pregunta 1 de </div>
-      <div class="progress-bar-container">
-        <div class="progress-bar" id="progress-bar"></div>
-      </div>
+    <div class="progress-indicator" id="progressIndicator">
+      Pregunta 1 de ~15-20
     </div>
 
-    <div class="question-card animated-card">
-      <h2 id="question-text">1. Me resulta difícil concentrarme durante períodos largos.</h2>
-      <div class="options" id="options-container"></div>
+    <div class="chat-messages" id="chatMessages">
+      <!-- Los mensajes se agregarán aquí dinámicamente -->
+    </div>
 
-      <div class="navigation-buttons">
-        <button id="backBtn" onclick="lastQuestion()">
-          <i class="fas fa-arrow-left"></i> Anterior
-        </button>
-        <button id="nextBtn" onclick="nextQuestion()">
-          Siguiente <i class="fas fa-arrow-right"></i>
-        </button>
-        <button id="resultBtn" onclick="showResults()">
-          Ver Resultados <i class="fas fa-chart-bar"></i>
+    <div class="chat-input-container">
+      <div class="chat-input-wrapper">
+        <input type="text" id="userInput" placeholder="Escribe tu respuesta aquí..." onkeypress="handleKeyPress(event)">
+        <button id="sendBtn" onclick="sendMessage()">
+          <i class="fas fa-paper-plane"></i> Enviar
         </button>
       </div>
     </div>
-
-    <div class="test-footer-text" data-aos="fade-up">
-      <p>Una vez completado, haz clic en "Ver Resultados" para recibir tu evaluación.</p>
-    </div>
   </div>
 
-  <div id="popup-warning" class="popup hidden">
-    <div class="popup-content">
-      <i class="fas fa-exclamation-circle" style="color: #ff7043; font-size: 2rem; margin-bottom: 15px;"></i>
-      <p>Por favor, selecciona una respuesta antes de continuar.</p>
-      <button onclick="closePopup()">Entendido</button>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
-    AOS.init({ once: true, duration: 800 });
+    // CONFIGURACIÓN DE API
+    const USE_BACKEND = false; // Cambia a true si usas el backend de Node.js
+    const BACKEND_URL = 'http://localhost:3000'; // URL de tu backend
+    
+    // Solo para Google AI Studio (si USE_BACKEND = false)
+    const API_KEY = 'AIzaSyAHMCIl0OUA4nwdpX4N3dWKfife2Jr9fcg';
+    
+    
+    let messageCount = 0;
+    const MAX_MESSAGES = 18;
+
+    // System prompt para entrenar a Gemini como evaluador de neurodivergencia
+    const systemPrompt = `Eres un asistente especializado en evaluación neurocognitiva. Tu objetivo es realizar una evaluación conversacional natural para identificar posibles signos de neurodivergencia, específicamente:
+
+1. TDAH (Trastorno por Déficit de Atención e Hiperactividad)
+2. TEA (Trastorno del Espectro Autista)
+3. Trastorno Bipolar
+4. Dislexia
+5. TOC (Trastorno Obsesivo-Compulsivo)
+
+INSTRUCCIONES IMPORTANTES:
+- Haz UNA pregunta a la vez de manera conversacional y empática
+- Adapta las preguntas según las respuestas previas del usuario
+- Explora áreas como: concentración, atención, organización, interacciones sociales, rutinas, estados de ánimo, lectura/escritura, y comportamientos repetitivos
+- Mantén un tono profesional pero cálido y comprensivo
+- NO hagas diagnósticos definitivos, solo evalúa la presencia de rasgos
+- Permite que el usuario se exprese libremente - sus respuestas pueden ser breves o largas
+- Después de aproximadamente 15-18 preguntas, tendrás suficiente información
+
+IMPORTANTE: Responde SOLO con tu pregunta o comentario. No incluyas explicaciones adicionales, notas, ni formato especial. Sé natural y conversacional.
+
+Comienza presentándote brevemente (máximo 2 líneas) y haciendo la primera pregunta sobre cómo la persona experimenta su día a día en términos de concentración o atención.`;
+
+    function startEvaluation() {
+      document.getElementById('introSection').classList.add('hidden');
+      document.getElementById('chatContainer').classList.remove('hidden');
+      
+      // Iniciar conversación
+      initializeChat();
+    }
+
+    async function initializeChat() {
+      conversationHistory = [];
+      messageCount = 0;
+      
+      // Agregar mensaje inicial de la IA
+      await sendAIMessage('', true);
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById('userInput');
+      const message = input.value.trim();
+      
+      if (!message) return;
+
+      // Deshabilitar input mientras se procesa
+      input.disabled = true;
+      document.getElementById('sendBtn').disabled = true;
+
+      // Mostrar mensaje del usuario
+      addMessage(message, 'user');
+      input.value = '';
+
+      // Incrementar contador y actualizar progreso
+      messageCount++;
+      updateProgress();
+
+      // Enviar a Gemini y obtener respuesta
+      await sendAIMessage(message, false);
+
+      // Rehabilitar input
+      input.disabled = false;
+      document.getElementById('sendBtn').disabled = false;
+      input.focus();
+    }
+
+    let conversationHistory = []; // historial global del chat
+
+    async function sendAIMessage(userMessage, isFirstMessage) {
+      const typingId = showTypingIndicator();
+      
+      try {
+        // Si es el primer mensaje, inicializar el historial con el system prompt
+        if (isFirstMessage) {
+          conversationHistory.push({
+            role: "user",
+            parts: [{ text: systemPrompt }]
+          });
+          conversationHistory.push({
+            role: "model",
+            parts: [{ text: "Entendido, comenzaré con la evaluación." }]
+          });
+        }
+
+        // Solo agregar mensaje del usuario si no es el primer mensaje
+        if (!isFirstMessage && userMessage) {
+          conversationHistory.push({
+            role: "user",
+            parts: [{ text: userMessage }]
+          });
+        }
+
+        const response = await fetch(
+          "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-goog-api-key": API_KEY
+            },
+            body: JSON.stringify({
+              contents: conversationHistory,
+              generationConfig: {
+                temperature: 0.8,
+                maxOutputTokens: 250
+              }
+            })
+          }
+        );
+
+        const data = await response.json();
+        console.log("Respuesta de Gemini:", data);
+
+        if (!response.ok) {
+          console.error("Error de API:", data);
+          throw new Error(`Error ${response.status}: ${data.error?.message || "Desconocido"}`);
+        }
+
+        const aiResponse =
+          data.candidates?.[0]?.content?.parts?.[0]?.text ||
+          "No se recibió respuesta del modelo.";
+
+        // Guardar la respuesta de la IA en el historial
+        conversationHistory.push({
+          role: "model",
+          parts: [{ text: aiResponse }]
+        });
+
+        removeTypingIndicator(typingId);
+        
+        // Mostrar el mensaje de la IA en el chat
+        addMessage(aiResponse, 'ai');
+
+        return aiResponse;
+      } catch (error) {
+        removeTypingIndicator(typingId);
+        console.error("Error completo:", error);
+        const errorMsg = `Error al conectar con la API: ${error.message}`;
+        addMessage(errorMsg, 'ai');
+        return errorMsg;
+      }
+    }
+
+
+    function addMessage(text, type) {
+      const messagesContainer = document.getElementById('chatMessages');
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${type}`;
+
+      const avatar = document.createElement('div');
+      avatar.className = 'message-avatar';
+      avatar.innerHTML = type === 'ai' ? '<i class="fas fa-brain"></i>' : '<i class="fas fa-user"></i>';
+
+      const content = document.createElement('div');
+      content.className = 'message-content';
+      content.textContent = text;
+
+      if (type === 'ai') {
+        messageDiv.appendChild(avatar);
+        messageDiv.appendChild(content);
+      } else {
+        messageDiv.appendChild(content);
+        messageDiv.appendChild(avatar);
+      }
+
+      messagesContainer.appendChild(messageDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+      const messagesContainer = document.getElementById('chatMessages');
+      const typingDiv = document.createElement('div');
+      const id = 'typing-' + Date.now();
+      typingDiv.id = id;
+      typingDiv.className = 'message ai';
+      
+      const avatar = document.createElement('div');
+      avatar.className = 'message-avatar';
+      avatar.innerHTML = '<i class="fas fa-brain"></i>';
+      
+      const content = document.createElement('div');
+      content.className = 'message-content';
+      content.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+      
+      typingDiv.appendChild(avatar);
+      typingDiv.appendChild(content);
+      messagesContainer.appendChild(typingDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      
+      return id;
+    }
+
+    function removeTypingIndicator(id) {
+      const indicator = document.getElementById(id);
+      if (indicator) {
+        indicator.remove();
+      }
+    }
+
+    function updateProgress() {
+      const progressText = messageCount >= MAX_MESSAGES 
+        ? 'Finalizando evaluación...' 
+        : `Pregunta ${messageCount + 1} de ~${MAX_MESSAGES}`;
+      document.getElementById('progressIndicator').textContent = progressText;
+    }
+
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        sendMessage();
+      }
+    }
+
+    async function generateResults() {
+      const summaryPrompt = `Basándote en toda nuestra conversación, genera un análisis detallado en formato JSON con la siguiente estructura:
+
+{
+  "resumen": "Un párrafo de 3-4 líneas resumiendo los hallazgos principales de manera clara y empática",
+  "puntuaciones": {
+    "tdah": [número de 0 a 100],
+    "tea": [número de 0 a 100],
+    "bipolar": [número de 0 a 100],
+    "dislexia": [número de 0 a 100],
+    "toc": [número de 0 a 100]
+  },
+  "hallazgos_principales": "2-3 oraciones sobre los patrones más relevantes observados",
+  "recomendaciones": "Recomendaciones específicas en 2-3 oraciones basadas en los hallazgos",
+  "areas_fuerza": "1-2 oraciones sobre áreas identificadas como fortalezas o recursos positivos"
+}
+
+IMPORTANTE: 
+- Las puntuaciones deben reflejar la intensidad/frecuencia de los rasgos observados
+- Sé preciso pero empático en tus observaciones
+- Responde SOLO con el JSON, sin texto adicional antes o después`;
+
+      conversationHistory.push({
+        role: 'user',
+        parts: [{ text: summaryPrompt }]
+      });
+
+      const typingId = showTypingIndicator();
+
+      try {
+        const payload = {
+          contents: conversationHistory,
+          generationConfig: {
+            temperature: 0.5,
+            maxOutputTokens: 1500,
+          }
+        };
+
+        let data;
+
+        if (USE_BACKEND) {
+          const response = await fetch(`${BACKEND_URL}/api/chat`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload)
+          });
+          data = await response.json();
+        } else {
+          const response = await fetch('https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-goog-api-key': API_KEY
+            },
+            body: JSON.stringify(payload)
+          });
+          data = await response.json();
+        }
+
+        const resultText = data.candidates[0].content.parts[0].text;
+        
+        const jsonMatch = resultText.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const results = JSON.parse(jsonMatch[0]);
+          sessionStorage.setItem('evaluacion_resultados', JSON.stringify(results));
+          sessionStorage.setItem('conversacion_completa', JSON.stringify(conversationHistory));
+          
+          removeTypingIndicator(typingId);
+          addMessage('Evaluación completada. Generando tu reporte detallado...', 'ai');
+          setTimeout(() => {
+            window.location.href = 'resultados.html';
+          }, 2000);
+        } else {
+          throw new Error('No se pudo generar el análisis en formato correcto');
+        }
+      } catch (error) {
+        removeTypingIndicator(typingId);
+        console.error('Error generando resultados:', error);
+        addMessage('Hubo un error al generar los resultados.', 'ai');
+      }
+    }
   </script>
 </body>
 </html>
