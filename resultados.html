@@ -4,16 +4,371 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Resultados - Test de Neurodivergencia</title>
-  <link rel="stylesheet" href="neurocss.css">
-  <script src="https://kit.fontawesome.com/5b42833b89.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-TfN1XKRqNHX0bRFGFtCyz3Buw+/RfG0K2JhOQGL6IjAx0c5dEfEyByIqvEX1iETMRpq79AaN1chfIep0QqLaYg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="icon" href="img/brain-solid.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #6e62b5;
+      --primary-light: #8f85cc;
+      --primary-dark: #4d4380;
+      --secondary-color: #f9f9f9;
+      --accent-color: #ff7043;
+      --success-color: #28a745;
+      --text-color: #333333;
+      --light-gray: #e0e0e0;
+      --white: #ffffff;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary-color) 30%, var(--secondary-color) 70%, var(--primary-light) 100%);
+      color: var(--text-color);
+      min-height: 100vh;
+      padding-bottom: 50px;
+    }
+
+    header {
+      background-color: var(--white);
+      box-shadow: var(--shadow);
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+
+    .logo i {
+      margin-right: 10px;
+      font-size: 1.5rem;
+    }
+
+    .results-container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 40px;
+      background-color: var(--white);
+      border-radius: 15px;
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .results-header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 3px solid var(--primary-light);
+    }
+
+    .results-header h1 {
+      color: var(--primary-color);
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+
+    .results-header .subtitle {
+      color: #666;
+      font-size: 1rem;
+    }
+
+    .section {
+      margin-bottom: 40px;
+      padding: 25px;
+      background-color: var(--secondary-color);
+      border-radius: 12px;
+      border-left: 5px solid var(--primary-color);
+    }
+
+    .section h2 {
+      color: var(--primary-color);
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section p {
+      line-height: 1.8;
+      font-size: 1.05rem;
+      color: var(--text-color);
+    }
+
+    .scores-grid {
+      display: grid;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .score-item {
+      background-color: var(--white);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      animation: slideIn 0.5s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .score-item:nth-child(1) { animation-delay: 0.1s; }
+    .score-item:nth-child(2) { animation-delay: 0.2s; }
+    .score-item:nth-child(3) { animation-delay: 0.3s; }
+    .score-item:nth-child(4) { animation-delay: 0.4s; }
+    .score-item:nth-child(5) { animation-delay: 0.5s; }
+
+    .score-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .score-label {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--primary-dark);
+    }
+
+    .score-value {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+
+    .score-bar-container {
+      width: 100%;
+      height: 12px;
+      background-color: var(--light-gray);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .score-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-light), var(--primary-color));
+      border-radius: 6px;
+      transition: width 1s ease;
+    }
+
+    .score-interpretation {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      color: #666;
+      font-style: italic;
+    }
+
+    .alert-box {
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+    }
+
+    .alert-box.info {
+      background-color: #e3f2fd;
+      border-left: 5px solid #2196f3;
+    }
+
+    .alert-box.warning {
+      background-color: #fff3e0;
+      border-left: 5px solid #ff9800;
+    }
+
+    .alert-box i {
+      font-size: 1.5rem;
+      margin-top: 3px;
+    }
+
+    .alert-box.info i {
+      color: #2196f3;
+    }
+
+    .alert-box.warning i {
+      color: #ff9800;
+    }
+
+    .alert-content h3 {
+      margin: 0 0 8px 0;
+      font-size: 1.2rem;
+    }
+
+    .alert-content p {
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+
+    .action-buttons button {
+      padding: 15px 30px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(110, 98, 181, 0.4);
+    }
+
+    .btn-secondary {
+      background-color: var(--light-gray);
+      color: var(--text-color);
+    }
+
+    .btn-secondary:hover {
+      background-color: #d0d0d0;
+    }
+
+    .resources-section {
+      margin-top: 30px;
+    }
+
+    .resource-card {
+      background-color: var(--white);
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 15px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .resource-card h4 {
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+
+    .resource-card a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .resource-card a:hover {
+      text-decoration: underline;
+    }
+
+    .resource-card iframe {
+      width: 100%;
+      max-width: 560px;
+      height: 315px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .disclaimer {
+      background-color: #fff9e6;
+      border: 2px solid #ffc107;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .disclaimer i {
+      font-size: 2rem;
+      color: #ffc107;
+      margin-bottom: 10px;
+    }
+
+    .disclaimer p {
+      margin: 10px 0;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      .results-container {
+        padding: 20px;
+        margin: 20px 10px;
+      }
+
+      .results-header h1 {
+        font-size: 1.8rem;
+      }
+
+      .section {
+        padding: 20px;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .action-buttons button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
     <div class="nav-container">
       <a href="index.html" class="logo">
-        <i class="fas fa-brain icon"></i>
+        <i class="fas fa-brain"></i>
         Neuroclave
       </a>
     </div>
@@ -21,179 +376,253 @@
 
   <div class="results-container">
     <div class="results-header">
-      <h1>Resultados de Tu Evaluación</h1>
-      <p>Basado en tus respuestas, estos son los resultados de tu evaluación de neurodivergencia.</p>
+      <h1><i class="fas fa-chart-line"></i> Resultados de Tu Evaluación</h1>
+      <p class="subtitle">Análisis generado por Inteligencia Artificial</p>
     </div>
 
-    <div class="results-summary" id="overall-summary"></div>
-
-    <div class="neurodiv-type">
-      <h2>Perfil de Neurodivergencia</h2>
-      <p>Esta evaluación analiza la presencia de rasgos asociados con diferentes tipos de neurodivergencia. Recuerda que esto no es un diagnóstico clínico.</p>
-
-      <!-- Bloques de resultados -->
-      <div class="result-score">
-        <div class="score-label">TDAH</div>
-        <div class="score-bar-container"><div class="score-bar" id="tdah-bar"></div></div>
-        <div class="score-value" id="tdah-score">0%</div>
-      </div>
-      <div class="result-score">
-        <div class="score-label">Espectro Autista</div>
-        <div class="score-bar-container"><div class="score-bar" id="tea-bar"></div></div>
-        <div class="score-value" id="tea-score">0%</div>
-      </div>
-      <div class="result-score">
-        <div class="score-label">Trastorno Bipolar</div>
-        <div class="score-bar-container"><div class="score-bar" id="bipolar-bar"></div></div>
-        <div class="score-value" id="bipolar-score">0%</div>
-      </div>
-      <div class="result-score">
-        <div class="score-label">Dislexia</div>
-        <div class="score-bar-container"><div class="score-bar" id="dislexia-bar"></div></div>
-        <div class="score-value" id="dislexia-score">0%</div>
-      </div>
-      <div class="result-score">
-        <div class="score-label">TOC</div>
-        <div class="score-bar-container"><div class="score-bar" id="toc-bar"></div></div>
-        <div class="score-value" id="toc-score">0%</div>
+    <div class="alert-box info">
+      <i class="fas fa-info-circle"></i>
+      <div class="alert-content">
+        <h3>Importante</h3>
+        <p>Esta evaluación ha sido realizada por inteligencia artificial y <strong>no constituye un diagnóstico clínico</strong>. Los resultados son orientativos y deben ser interpretados por un profesional de la salud mental.</p>
       </div>
     </div>
 
-    <div class="result-details" id="specific-details"></div>
+    <div id="loading" style="text-align: center; padding: 40px;">
+      <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--primary-color);"></i>
+      <p style="margin-top: 20px; font-size: 1.2rem;">Cargando resultados...</p>
+    </div>
 
-    <div class="action-buttons">
-      <button onclick="window.location.href='index.html?reset=true'">
-        <i class="fas fa-redo"></i> Realizar Test de Nuevo
-      </button>
+    <div id="results-content" style="display: none;">
+      <!-- Resumen general -->
+      <div class="section">
+        <h2><i class="fas fa-clipboard-check"></i> Resumen General</h2>
+        <p id="resumen-text"></p>
+      </div>
+
+      <!-- Puntuaciones -->
+      <div class="section">
+        <h2><i class="fas fa-chart-bar"></i> Perfil de Neurodivergencia</h2>
+        <p style="margin-bottom: 20px;">Los siguientes porcentajes indican la presencia de rasgos asociados con diferentes condiciones neurodivergentes basados en tus respuestas durante la conversación.</p>
+        <div class="scores-grid" id="scores-container">
+          <!-- Las puntuaciones se cargarán aquí -->
+        </div>
+      </div>
+
+      <!-- Hallazgos principales -->
+      <div class="section">
+        <h2><i class="fas fa-search"></i> Hallazgos Principales</h2>
+        <p id="hallazgos-text"></p>
+      </div>
+
+      <!-- Áreas de fortaleza -->
+      <div class="section">
+        <h2><i class="fas fa-star"></i> Áreas de Fortaleza</h2>
+        <p id="fortalezas-text"></p>
+      </div>
+
+      <!-- Recomendaciones -->
+      <div class="section">
+        <h2><i class="fas fa-lightbulb"></i> Recomendaciones</h2>
+        <p id="recomendaciones-text"></p>
+      </div>
+
+      <!-- Recursos adicionales -->
+      <div class="section resources-section">
+        <h2><i class="fas fa-book"></i> Recursos Adicionales</h2>
+        <p>Basado en tus resultados, te recomendamos explorar los siguientes recursos:</p>
+        <div id="recursos-container">
+          <!-- Los recursos se cargarán dinámicamente -->
+        </div>
+      </div>
+
+      <!-- Consulta profesional -->
+      <div class="alert-box warning">
+        <i class="fas fa-user-md"></i>
+        <div class="alert-content">
+          <h3>¿Necesitas ayuda profesional?</h3>
+          <p>Si identificas dificultades significativas o constantes en tu día a día, te recomendamos consultar con un especialista. Aquí te dejamos algunos recursos:</p>
+          <p style="margin-top: 10px;">
+            <a href="https://www.topdoctors.mx/" target="_blank" style="color: #ff9800; font-weight: 600;">Top Doctors México</a> | 
+            <a href="https://www.doctoralia.com.mx/" target="_blank" style="color: #ff9800; font-weight: 600;">Doctoralia México</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Disclaimer final -->
+      <div class="disclaimer">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p><strong>Aviso Legal:</strong></p>
+        <p>Esta herramienta utiliza inteligencia artificial para analizar patrones en tus respuestas. Los resultados son informativos y no reemplazan una evaluación profesional realizada por un psicólogo, psiquiatra u otro profesional de salud mental certificado.</p>
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="action-buttons">
+        <button class="btn-primary" onclick="window.print()">
+          <i class="fas fa-print"></i> Imprimir Resultados
+        </button>
+        <button class="btn-secondary" onclick="window.location.href='index.html'">
+          <i class="fas fa-redo"></i> Realizar Nueva Evaluación
+        </button>
+      </div>
     </div>
   </div>
 
   <script>
+    const categoryNames = {
+      tdah: "TDAH",
+      tea: "Espectro Autista",
+      bipolar: "Trastorno Bipolar",
+      dislexia: "Dislexia",
+      toc: "TOC"
+    };
+
+    const categoryResources = {
+      tdah: {
+        title: "Recursos sobre TDAH",
+        video: "https://www.youtube.com/embed/0ibhOUeBUVs",
+        description: "Video informativo sobre el Trastorno por Déficit de Atención e Hiperactividad"
+      },
+      tea: {
+        title: "Recursos sobre Espectro Autista",
+        video: "https://www.youtube.com/embed/Vu2LmkNZPOM",
+        description: "Video informativo sobre el Trastorno del Espectro Autista"
+      },
+      bipolar: {
+        title: "Recursos sobre Trastorno Bipolar",
+        link: "https://www.nimh.nih.gov/health/publications/espanol/trastorno-bipolar",
+        description: "Información detallada del Instituto Nacional de Salud Mental"
+      },
+      dislexia: {
+        title: "Recursos sobre Dislexia",
+        video: "https://www.youtube.com/embed/A2xp0zoqFPY",
+        description: "Video informativo sobre Dislexia"
+      },
+      toc: {
+        title: "Recursos sobre TOC",
+        video: "https://www.youtube.com/embed/PF6AF4fhcIk",
+        description: "Video informativo sobre el Trastorno Obsesivo-Compulsivo"
+      }
+    };
+
+    function getScoreInterpretation(score) {
+      if (score < 30) return "Bajo - Rasgos mínimos";
+      if (score < 50) return "Moderado-Bajo - Algunos rasgos presentes";
+      if (score < 70) return "Moderado-Alto - Rasgos significativos";
+      return "Alto - Rasgos muy presentes";
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
-      const answers = JSON.parse(localStorage.getItem('neurodivergencia_respuestas'));
-      if (!answers || answers.length === 0) {
-        document.getElementById('overall-summary').innerHTML = '<p>No se encontraron respuestas. Por favor, completa el test.</p>';
+      const resultsData = sessionStorage.getItem('evaluacion_resultados');
+      
+      if (!resultsData) {
+        document.getElementById('loading').innerHTML = `
+          <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: var(--accent-color);"></i>
+          <p style="margin-top: 20px; font-size: 1.2rem;">No se encontraron resultados.</p>
+          <p style="margin-top: 10px;">Por favor, completa la evaluación primero.</p>
+          <button class="btn-primary" onclick="window.location.href='index.html'" style="margin-top: 20px; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem;">
+            <i class="fas fa-arrow-left"></i> Volver al inicio
+          </button>
+        `;
         return;
       }
 
-      const weights = [0, 0.25, 0.5, 0.75, 1];
-      const allQuestions = [
-        { type: ["tdah", "dislexia"] }, { type: ["tdah", "bipolar"] }, { type: ["tea"] },
-        { type: ["toc"] }, { type: ["tea", "toc"] }, { type: ["tea"] },
-        { type: ["bipolar"] }, { type: ["bipolar", "tdah"] }, { type: ["dislexia"] },
-        { type: ["dislexia"] }, { type: ["toc"] }, { type: ["toc"] }, { type: ["tdah"] },
-        { type: ["tea"] }, { type: ["toc"] }, { type: ["bipolar"] }, { type: ["dislexia"] },
-        { type: ["tea", "tdah"] }, { type: ["toc"] }, { type: ["bipolar", "tdah"] }
-      ];
+      try {
+        const results = JSON.parse(resultsData);
+        
+        // Ocultar loading y mostrar contenido
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('results-content').style.display = 'block';
 
-      const scores = { tdah: 0, tea: 0, bipolar: 0, dislexia: 0, toc: 0 };
-      const maxScores = { tdah: 0, tea: 0, bipolar: 0, dislexia: 0, toc: 0 };
+        // Cargar resumen
+        document.getElementById('resumen-text').textContent = results.resumen || "No disponible";
 
-      allQuestions.forEach((q, i) => {
-        const res = answers[i] ?? -1;
-        if (res >= 0 && res <= 4) {
-          q.type.forEach(t => {
-            scores[t] += weights[res];
-            maxScores[t] += 1;
-          });
+        // Cargar hallazgos
+        document.getElementById('hallazgos-text').textContent = results.hallazgos_principales || "No disponible";
+
+        // Cargar fortalezas
+        document.getElementById('fortalezas-text').textContent = results.areas_fuerza || "No disponible";
+
+        // Cargar recomendaciones
+        document.getElementById('recomendaciones-text').textContent = results.recomendaciones || "No disponible";
+
+        // Cargar puntuaciones
+        const scoresContainer = document.getElementById('scores-container');
+        const scores = results.puntuaciones || {};
+        
+        // Encontrar la categoría con mayor puntuación
+        let highestCategory = null;
+        let highestScore = 0;
+        
+        for (const [category, score] of Object.entries(scores)) {
+          const scoreItem = document.createElement('div');
+          scoreItem.className = 'score-item';
+          
+          const interpretation = getScoreInterpretation(score);
+          
+          scoreItem.innerHTML = `
+            <div class="score-header">
+              <span class="score-label">${categoryNames[category]}</span>
+              <span class="score-value">${score}%</span>
+            </div>
+            <div class="score-bar-container">
+              <div class="score-bar" style="width: 0%;" data-width="${score}%"></div>
+            </div>
+            <div class="score-interpretation">${interpretation}</div>
+          `;
+          
+          scoresContainer.appendChild(scoreItem);
+          
+          if (score > highestScore) {
+            highestScore = score;
+            highestCategory = category;
+          }
         }
-      });
 
-      const percentages = {};
-      for (const t in scores) {
-        percentages[t] = maxScores[t] > 0 ? Math.round((scores[t] / maxScores[t]) * 100) : 0;
-        document.getElementById(`${t}-bar`).style.width = percentages[t] + "%";
-        document.getElementById(`${t}-score`).textContent = percentages[t] + "%";
+        // Animar las barras de progreso
+        setTimeout(() => {
+          document.querySelectorAll('.score-bar').forEach(bar => {
+            bar.style.width = bar.getAttribute('data-width');
+          });
+        }, 100);
+
+        // Cargar recursos basados en la categoría con mayor puntuación
+        if (highestCategory && highestScore >= 50) {
+          loadResources(highestCategory);
+        } else {
+          document.querySelector('.resources-section').style.display = 'none';
+        }
+
+      } catch (error) {
+        console.error('Error al cargar resultados:', error);
+        document.getElementById('loading').innerHTML = `
+          <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: var(--accent-color);"></i>
+          <p style="margin-top: 20px; font-size: 1.2rem;">Error al cargar los resultados.</p>
+          <p style="margin-top: 10px;">Por favor, intenta realizar la evaluación nuevamente.</p>
+        `;
       }
-
-      const highest = Object.entries(percentages).sort((a, b) => b[1] - a[1])[0];
-      const highType = highest[0], highScore = highest[1];
-      const nameMap = {
-        tdah: "Trastorno por Déficit de Atención e Hiperactividad",
-        tea: "Trastorno del Espectro Autista",
-        bipolar: "Trastorno Bipolar",
-        dislexia: "Dislexia",
-        toc: "Trastorno Obsesivo-Compulsivo"
-      };
-
-      const summary = document.getElementById('overall-summary');
-      const icon = highScore < 30 ? "check-circle" : highScore < 60 ? "info-circle" : "lightbulb";
-      const color = highScore < 30 ? "#28a745" : highScore < 60 ? "#6e62b5" : "#ff7043";
-      const title = highScore < 30 ? "Perfil Neurotípico Predominante"
-                   : highScore < 60 ? "Algunos Rasgos Neurodivergentes"
-                   : "Rasgos Neurodivergentes Significativos";
-      const desc = highScore < 30
-        ? "Tus respuestas sugieren que presentas principalmente características neurotípicas."
-        : highScore < 60
-          ? `Tus respuestas indican la presencia de algunos rasgos neurodivergentes, particularmente relacionados con ${nameMap[highType]}.`
-          : `Tus respuestas sugieren una presencia notable de rasgos asociados con ${nameMap[highType]}.`;
-
-      summary.innerHTML = `
-        <div style="display:flex;align-items:center;margin-bottom:10px;">
-          <i class="fas fa-${icon}" style="color:${color};font-size:2rem;margin-right:15px;"></i>
-          <div>
-            <h3>${title}</h3><p>${desc}</p>
-          </div>
-        </div>
-        <p><strong>Nota:</strong> Esta evaluación no constituye un diagnóstico clínico.</p>
-      `;
-
-      // Consulta de especialistas (sin tocar el diseño)
-      const consultationHTML = `
-        <p style="margin-top:20px;">
-          Si sientes que tienes problemas graves/constantes con algún rasgo que notes en ti mismo, favor de consultar algún especialista real en alguno de estos sitios:
-          <br>
-          <a href="https://www.topdoctors.mx/" target="_blank">Top Doctors</a>
-          <br>
-          <a href="https://www.doctoralia.com.mx/" target="_blank">Doctoralia</a>
-        </p>
-      `;
-
-      // Sección de recurso con vista previa, según el tipo de puntaje dominante
-      let resourcePreviewHTML = "";
-      switch (highType) {
-        case 'tdah':
-          resourcePreviewHTML = `
-            <div class="resource-preview" style="margin-top:20px;">
-              <p>Te recomendamos ver este video para profundizar en temas relacionados con TDAH:</p>
-              <iframe width="560" height="315" src="https://www.youtube.com/embed/0ibhOUeBUVs" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>`;
-          break;
-        case 'tea':
-          resourcePreviewHTML = `
-            <div class="resource-preview" style="margin-top:20px;">
-              <p>Te recomendamos ver este video para profundizar en temas relacionados con el Trastorno del Espectro Autista:</p>
-              <iframe width="560" height="315" src="https://www.youtube.com/embed/Vu2LmkNZPOM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>`;
-          break;
-        case 'bipolar':
-          resourcePreviewHTML = `
-            <div class="resource-preview" style="margin-top:20px;">
-              <p>Te recomendamos leer el siguiente recurso para profundizar en temas relacionados con el Trastorno Bipolar:</p>
-              <a href="https://www.nimh.nih.gov/health/publications/espanol/trastorno-bipolar" target="_blank">Recurso para Trastorno Bipolar</a>
-            </div>`;
-          break;
-        case 'dislexia':
-          resourcePreviewHTML = `
-            <div class="resource-preview" style="margin-top:20px;">
-              <p>Te recomendamos ver este video para profundizar en temas relacionados con Dislexia:</p>
-              <iframe width="560" height="315" src="https://www.youtube.com/embed/A2xp0zoqFPY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>`;
-          break;
-        case 'toc':
-          resourcePreviewHTML = `
-            <div class="resource-preview" style="margin-top:20px;">
-              <p>Te recomendamos ver este video para profundizar en temas relacionados con TOC:</p>
-              <iframe width="560" height="315" src="https://www.youtube.com/embed/PF6AF4fhcIk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>`;
-          break;
-        default:
-          resourcePreviewHTML = "";
-      }
-
-      // Añadimos al resumen el aviso de consulta y la vista previa del recurso
-      summary.innerHTML += consultationHTML + resourcePreviewHTML;
     });
+
+    function loadResources(category) {
+      const resourcesContainer = document.getElementById('recursos-container');
+      const resource = categoryResources[category];
+      
+      if (!resource) return;
+
+      const resourceCard = document.createElement('div');
+      resourceCard.className = 'resource-card';
+      
+      let content = `<h4>${resource.title}</h4><p>${resource.description}</p>`;
+      
+      if (resource.video) {
+        content += `<iframe src="${resource.video}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+      } else if (resource.link) {
+        content += `<p style="margin-top: 15px;"><a href="${resource.link}" target="_blank">Ver recurso <i class="fas fa-external-link-alt"></i></a></p>`;
+      }
+      
+      resourceCard.innerHTML = content;
+      resourcesContainer.appendChild(resourceCard);
+    }
   </script>
 </body>
 </html>
